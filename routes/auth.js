@@ -23,7 +23,8 @@ router.post('/login', async (req, res) => {
   const user = await findUser(  req.body.username  );
 
   if (!user || !await bcrypt.compare( req.body.password,user.password)) {
-    return res.sendStatus(401); 
+    
+    return  res.sendStatus(401).json({ message: 'You are not authorized' });; 
   }
 
   // Si son correctas, generar un JWT
@@ -117,8 +118,12 @@ router.get('/getCharacter', async (req, res) => {
     res.status(200).json(response);
   } catch (e) {
     // Si el JWT no es válido, denegar el acceso
-    res.sendStatus(401);
+    res.sendStatus(401).json({ message: 'You are not authorized' });
   }
+});
+
+router.use((req, res) => {
+  res.status(404).json({ message: 'Route not found' });
 });
 
 module.exports = router;
