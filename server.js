@@ -6,7 +6,7 @@ const cors = require("cors");
 
 const app = express();
 app.use(cookieParser());
-app.use(cors({ credentials: true, origin:"https://login-auth-1po8o70bl-reginaldodelarosa.vercel.app/" }));
+app.use(cors({ credentials: true, origin:"https://login-auth-1po8o70bl-reginaldodelarosa.vercel.app" }));
 app.use(express.json({ limit: "10mb", extended: true }));
 app.use("/", authRoutes);
 
