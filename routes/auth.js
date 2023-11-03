@@ -118,7 +118,7 @@ router.get('/getCharacter', async (req, res) => {
     res.status(200).json(response);
   } catch (e) {
     // Si el JWT no es válido, denegar el acceso
-    res.sendStatus(401).json({ message: 'You are not authorized' });
+    res.status(401).json({ message: 'You are not authorized' });
   }
 });
 
