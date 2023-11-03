@@ -30,7 +30,7 @@ router.post('/login', async (req, res) => {
   const token = jwt.sign({ id: user.id }, 'zkEuC0T9x5zwJED', { expiresIn: '1h' });
 
   // Almacenar el JWT en las cookies
-  res.cookie('token', token, { httpOnly: true , sameSite: 'none'});
+  res.cookie('token', token, { httpOnly: true , sameSite: 'none', secure: true});
   res.sendStatus(200);
   console.log("logged")
 });
@@ -87,7 +87,7 @@ router.post('/register', async (req, res) => {
 
   const token = jwt.sign({ id: insert.insertId }, 'zkEuC0T9x5zwJED', { expiresIn: '1h' });
   // Store the JWT in the cookies
-  res.cookie('token', token, { httpOnly: true, sameSite: 'none'});
+  res.cookie('token', token, { httpOnly: true, sameSite: 'none', secure: true});
   res.status(200).json({ message: 'User registered successfully' });
 });
 
