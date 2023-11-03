@@ -43,9 +43,12 @@ router.get('/protected', (req, res) => {
     jwt.verify(token, 'zkEuC0T9x5zwJED');
 
     // Si el JWT es válido, permitir el acceso a la ruta
+    res.json({ message: 'You are authorized' });
     res.sendStatus(200);
+    
   } catch (e) {
     // Si el JWT no es válido, denegar el acceso
+    res.json({ message: 'You are not authorized' });
     res.sendStatus(401);
   }
 });
