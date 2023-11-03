@@ -94,7 +94,7 @@ router.post('/register', async (req, res) => {
 
 router.post('/logout', (req, res) => {
   // Eliminar la cookie con el JWT
-  res.clearCookie('token', { httpOnly: true, path: '/' });
+  res.clearCookie('token', { httpOnly: true, path: '/', sameSite: 'none', secure: true});
   res.sendStatus(200);
 });
 
