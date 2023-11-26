@@ -18,6 +18,7 @@ app.use('/api/sales/',salesRoutes);
 
 app.use("/api/auth/", authRoutes);
 
+
 app.listen(1200, function () {
   console.log(`Listening http://localhost:1200`);
 });

@@ -5,12 +5,24 @@ const db = require("../dbfile.js");
 exports.getSales = async (req, res) => {
   try {
     const conn = await db.getConnection();
-    const [rows] = await conn.query("SELECT * FROM ventas");
+    const [rows] = (await conn.query( 
+    `
+      SELECT 
+      t1.*,
+      t2.nombre,
+      t2.descripcion,
+      t2.precio,
+      t2.cantidad,
+      users.*
+    FROM ventas t1
+    JOIN productos t2 on t1.codigo_producto = t2.codigo 
+    JOIN users on t1.id_usuarios = users.id
+  `));
     conn.release();
     res.json(rows);
   } catch (err) {
     console.error(err);
-    res.status(500).send("Error al consultar las ventas");
+    res.status(500).send("Error al consultar las ventas" + err.message);
   }
 };
 
@@ -22,13 +34,15 @@ exports.createSale = async (req, res) => {
       codigo_producto,
       cantidad_vendida,
       total_venta,
+      id_usuarios,
     } = req.body;
     const [result] = await conn.query(
-      "INSERT INTO ventas(codigo_producto, cantidad_vendida, total_venta) VALUES (?, ?, ?)",
+      "INSERT INTO ventas(codigo_producto, cantidad_vendida, total_venta, id_usuarios) VALUES (?, ?, ?, ?)",
       [
         codigo_producto,
         cantidad_vendida,
         total_venta,
+        id_usuarios
       ]
     );
     const [rows] = await conn.query(
@@ -67,6 +81,7 @@ exports.updateSale = async (req, res) => {
       codigo_producto,
       fecha_venta,
       cantidad_vendida,
+      id_usuarios,
       total_venta,
     } = req.body;
     const fieldsToUpdate = {};
@@ -74,6 +89,7 @@ exports.updateSale = async (req, res) => {
     if (fecha_venta) fieldsToUpdate.fecha_venta = fecha_venta;
     if (cantidad_vendida) fieldsToUpdate.cantidad_vendida = cantidad_vendida;
     if (total_venta) fieldsToUpdate.total_venta = total_venta;
+    if (id_usuarios) fieldsToUpdate.id_usuarios = id_usuarios;
     const [result] = await conn.query("UPDATE ventas SET ? WHERE codigo = ?", [
       fieldsToUpdate,
       req.params.codigo,
@@ -92,7 +108,9 @@ exports.updateSale = async (req, res) => {
 exports.getSaleByCode = async (req, res) => {
   try {
     const conn = await db.getConnection();
-    const [rows] = await conn.query("SELECT * FROM ventas WHERE codigo = ?", [
+    const [rows] = await conn.query(`SELECT * FROM ventas t1
+    join productos t2 on t1.codigo_producto = t2.codigo
+    JOIN users on t1.id_usuarios = users.id WHERE t1.codigo = ?`, [
       req.params.codigo,
     ]);
     conn.release();
@@ -110,7 +128,7 @@ exports.getSaleByCode = async (req, res) => {
 exports.deleteSale = async (req, res) => {
   try {
     const conn = await db.getConnection();
-    const [result] = await conn.query("DELETE FROM ventas WHERE codigo = ?", [
+    const [result] = await conn.query("DELETE FROM ventas  WHERE codigo = ?", [
       req.params.codigo,
     ]);
     conn.release();

@@ -2,11 +2,19 @@ const mysql = require('mysql');
 const express = require('express');
 const mysql2 = require('mysql2/promise');
 
-const db = mysql2.createPool({
-  host: 'qz8si2yulh3i7gl3.cbetxkdyhwsb.us-east-1.rds.amazonaws.com',
+/*const db = mysql2.createPool({
+  host: 'remotemysql.com',
   user: 'vhmxn2i2eg55g9to',
   password:'p1foysvchnpfy14w',
   database: 'zsfb0y55rokea1so',
+  port: 3306,
+  multipleStatements: true,
+});*/
+const db = mysql2.createPool({
+  host: 'localhost',
+  user: 'root',
+  password:'',
+  database: 'ass',
   port: 3306,
   multipleStatements: true,
 });
@@ -31,7 +39,7 @@ db.connect(error => {
 const createUsersTable = `
   CREATE TABLE IF NOT EXISTS users (id INT AUTO_INCREMENT PRIMARY KEY,username VARCHAR(255) NOT NULL,password VARCHAR(255) NOT NULL,email VARCHAR(255) NOT NULL,telefono INT NOT NULL,status INT NOT NULL);
   CREATE TABLE IF NOT EXISTS productos (codigo INT PRIMARY KEY AUTO_INCREMENT,nombre VARCHAR(255),descripcion TEXT,precio DECIMAL(10, 2),cantidad INT);
-  CREATE TABLE IF NOT EXISTS ventas (codigo INT PRIMARY KEY AUTO_INCREMENT,codigo_producto INT, fecha_venta DATETIME DEFAULT CURRENT_TIMESTAMP,cantidad_vendida INT,total_venta DECIMAL(10, 2),FOREIGN KEY (codigo_producto) REFERENCES productos(codigo));
+  CREATE TABLE IF NOT EXISTS ventas (codigo INT PRIMARY KEY AUTO_INCREMENT,codigo_producto INT, id_usuarios INT, fecha_venta DATETIME DEFAULT CURRENT_TIMESTAMP,cantidad_vendida INT,total_venta DECIMAL(10, 2),FOREIGN KEY (codigo_producto) REFERENCES productos(codigo), FOREIGN KEY (id_usuarios) REFERENCES users(id));
 `;
 (async () => {
   const conn = await db.getConnection();

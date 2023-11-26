@@ -4,6 +4,7 @@ const database = require("../dbfile.js");
 const bcrypt = require("bcrypt");
 const router = express.Router();
 const salesController = require("../controllers/sales.controller.js");
+const db = require("../dbfile.js");
 
 const findUser = (username) => {
   return new Promise(async (resolve, reject) => {
@@ -38,9 +39,25 @@ const findUserById = (id) => {
   });
 };
 
+const findUser2 = () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const db = await database.getConnection();
+      const [results] = await db.query(
+        "SELECT * FROM users"
+      );
+      
+      db.release();
+      resolve(results);
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
 router.post("/login", async (req, res) => {
   // Verificar las credenciales del usuario en la base de datos
-
+ 
   const user = await findUser(req.body.username);
 
   if (!user || !(await bcrypt.compare(req.body.password, user.password))) {
@@ -162,6 +179,18 @@ router.post("/getUser", async (req, res) => {
     let user = jwt.decode(token);
     let _user = await findUserById(user.id);
     res.status(200).json({ user: _user });
+  } else {
+    res.status(401).json({ message: "You are not authorized" });
+  }
+});
+router.get("/getUsers", async (req, res) => {
+  // Verificar el JWT en las cookies
+  const users = await findUser2();
+  if (req.cookies["token"]) {
+    const token = req.cookies.token;
+    jwt.verify(token, "zkEuC0T9x5zwJED");
+    const _user = users; // Guardar todos los usuarios encontrados en _user
+    res.status(200).json({ _user });
   } else {
     res.status(401).json({ message: "You are not authorized" });
   }
