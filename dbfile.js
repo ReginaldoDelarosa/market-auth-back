@@ -11,10 +11,10 @@ const mysql2 = require('mysql2/promise');
   multipleStatements: true,
 });*/
 const db = mysql2.createPool({
-  host: 'localhost',
-  user: 'root',
-  password:'',
-  database: 'ass',
+  host: 'qz8si2yulh3i7gl3.cbetxkdyhwsb.us-east-1.rds.amazonaws.com',
+  user: 'vhmxn2i2eg55g9to',
+  password:'p1foysvchnpfy14w',
+  database: 'zsfb0y55rokea1so',
   port: 3306,
   multipleStatements: true,
 });
