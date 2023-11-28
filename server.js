@@ -9,7 +9,7 @@ const salesRoutes = require('./routes/sales.routes');
 const app = express();
 
 app.use(cookieParser());
-app.use(cors({ credentials: true, origin:"https://login-auth-j6y58x06x-reginaldodelarosa.vercel.app" }));
+app.use(cors({ credentials: true, origin:"https://login-auth-8tg484gbo-reginaldodelarosa.vercel.app" }));
 app.use(express.json({ limit: "10mb", extended: true }));
 
 app.use('/api/products/',productsRoutes);
