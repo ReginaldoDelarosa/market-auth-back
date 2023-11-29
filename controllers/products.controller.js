@@ -2,13 +2,18 @@ const database = require('../dbfile.js');
 
 
 exports.getProducts = async (req, res) => {
+  let conn = null
+
   try {
-    const conn = await database.getConnection();
+    conn = await database.getConnection();
     const [rows] = await conn.query("SELECT * FROM productos");
     conn.release();
     res.json(rows);
   } catch (err) {
     console.error(err);
+    if (conn){
+      conn.release();
+    }
     res.status(500).send("Error al consultar los productos");
   }
 };
@@ -28,6 +33,7 @@ exports.getProductByCode = async (req, res) => {
     }
   } catch (err) {
     console.error(err);
+    conn.release();
     res.status(500).send("Error al consultar el producto");
   }
 };
